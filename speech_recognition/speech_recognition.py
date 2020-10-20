@@ -7,7 +7,7 @@ AUDIO_FILE = path.join(path.dirname(path.realpath(__file__)), "test.wav")
 
 r = sr.Recognizer()  # using the audio file as the audio source
 with sr.AudioFile(AUDIO_FILE) as source:
-    # r.adjust_for_ambient_noise(source)  # to reduce noise (use it in case there is music/noise in audio book
+    # r.adjust_for_ambient_noise(source)  # to reduce noise (use it in case there is music/noise in audio book)
     audio = r.record(source)  # reading the entire audio file
 
 
