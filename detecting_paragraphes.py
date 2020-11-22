@@ -44,19 +44,20 @@ initial_content = unpack('resources/text_of_test.txt')
 recognised_content = cleaning_text(recognised_content)
 initial_content = cleaning_text(initial_content)
 
-coefficient = 1.2 * float(len(recognised_content) / len(initial_content))  # coefficient of difference
 
-
+recognised_dividers = []
 dividers = [divider.start() for divider in re.finditer('\n\n', initial_content)]
 # now we have a list of dividers
 # thus, we know the potential indexes of dividers in recognised text
 
-"""
+
 what = 0
 good = 0  # for test
 bad = 0
-"""
-epsilon = 3100
+ok = 0
+
+
+epsilon = 52
 # let's find actual dividers in recognised text
 for index, divider in enumerate(dividers):
     if index == 0:
@@ -75,45 +76,65 @@ for index, divider in enumerate(dividers):
     last_word_to_match = last_word(indexes_of_last_words, first_paragraph)
     # got the last word before divider
     first_divider_of_audio_paragraphs = recognised_content.find(last_word_to_match,
-                                                                int(coefficient * divider) - epsilon,
-                                                                int(coefficient * divider) + epsilon)
+                                                                divider - epsilon,
+                                                                divider + epsilon)
     # got the first potential divider in recognised text
 
+    print(last_word_to_match)
+
     if first_divider_of_audio_paragraphs == - 1:
+        pass
         # raise ValueError('There are no matches')
-        print('oops')  # just for test :)
+        # print('oops')  # just for test :)
     else:
+        pass
         first_divider_of_audio_paragraphs += len(last_word_to_match) - 1
-        print(first_divider_of_audio_paragraphs)
+        # print(first_divider_of_audio_paragraphs)
 
     indexes_of_first_words = find_words(second_paragraph)
     # got the indexes of words in second paragraph
     first_word_to_match = first_word(indexes_of_first_words, second_paragraph)
     # got the first word before divider
     last_divider_of_audio_paragraphs = recognised_content.find(first_word_to_match,
-                                                               int(coefficient * divider) - epsilon,
-                                                               int(coefficient * divider) + epsilon)
+                                                               divider - epsilon,
+                                                               divider + epsilon)
     # got the second potential divider in recognised text
 
+    print(first_word_to_match)
+
     if last_divider_of_audio_paragraphs == - 1:
+        pass
         # raise ValueError('There are no matches')
-        print('oops')  # just for test :)
+        # print('oops')  # just for test :)
     else:
-        print(last_divider_of_audio_paragraphs)
+        pass
+        # print(last_divider_of_audio_paragraphs)
 
-    print()
-
-"""
-    if first_divider_of_audio_paragraphs == -1 or last_divider_of_audio_paragraphs == -1:
+    if first_divider_of_audio_paragraphs == -1 and last_divider_of_audio_paragraphs == -1:
+        recognised_dividers.append('ooops')
         what += 1
 
-    elif abs(last_divider_of_audio_paragraphs - first_divider_of_audio_paragraphs) < 3:
+    elif first_divider_of_audio_paragraphs == -1:
+        recognised_dividers.append(last_divider_of_audio_paragraphs)
+        ok += 1
+
+    elif last_divider_of_audio_paragraphs == -1:
+        recognised_dividers.append(first_divider_of_audio_paragraphs)
+        ok += 1
+
+    elif abs(last_divider_of_audio_paragraphs - first_divider_of_audio_paragraphs) < 63:
+        recognised_dividers.append(last_divider_of_audio_paragraphs)
         good += 1
 
     else:
         bad += 1
 
+"""
 print(what)
 print(good)
 print(bad)
+print(ok)
 """
+
+print(*dividers)
+print(*recognised_dividers)
